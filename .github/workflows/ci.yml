@@ -1,1 +1,32 @@
-#
+name: ci-pipeline
+
+on:
+    push:
+        branches: [master]
+    pull_request:
+        branches: [master]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: install clang-tidy
+        run: sudo apt-get install -y clang-tidy
+
+      - name: lint files
+        run: clang-tidy my-program.c
+  build:
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "building"
+
+  test:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "testing"
+
